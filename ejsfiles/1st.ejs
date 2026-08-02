@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App - Messages</title>
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+  
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <div class="chat-container">
+    
+        <div class="chat-header">
+            <div class="header-text">
+                <h2>User Chat History</h2>
+                <p>All conversations recorded in the database</p>
+            </div>
+            <a href="/new/chat" class="btn-new-chat">
+                <i class="fa-solid fa-plus"></i>
+                <span>New Chat</span>
+            </a>
+        </div>
+
+     
+        <div class="chat-feed">
+            <% if(result.length === 0) { %>
+                <div class="empty-state">
+                    <div class="icon-circle">
+                        <i class="fa-regular fa-comments"></i>
+                    </div>
+                    <h3>No Chats Yet</h3>
+                    <p>Click <strong>New Chat</strong> to create your first conversation!</p>
+                </div>
+            <% } %>
+
+            <% for(let user of result) { %>
+                <div class="chat-card">
+                    
+                    <div class="chat-user-info">
+                        <div class="user-badge sender">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <span><strong>From:</strong> <%= user.from %></span>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long arrow-icon"></i>
+                        <div class="user-badge receiver">
+                            <i class="fa-regular fa-paper-plane"></i>
+                            <span><strong>To:</strong> <%= user.to %></span>
+                        </div>
+                    </div>
+
+                   
+                    <div class="msg-bubble">
+                        <p class="msg-text"><%= user.msg %></p>
+
+                        <div class="msg-meta">
+                            <% if(user.create_at) { %>
+                                <span class="time">
+                                    <i class="fa-regular fa-clock"></i> 
+                                    <%= user.create_at.toString().split(" ")[4] %>
+                                </span>
+                                <span class="date">
+                                    <i class="fa-regular fa-calendar"></i> 
+                                    <%= user.create_at.toString().split(" ").slice(0, 4).join(" ") %>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+
+                 
+                    <div class="chat-actions">
+                        <form method="GET" action="/update/<%= user._id %>">
+                            <button type="submit" class="btn-action edit-btn">
+                                <i class="fa-regular fa-pen-to-square"></i> Edit
+                            </button>
+                        </form>
+
+                        <form method="POST" action="/update/<%= user._id %>?_method=DELETE">
+                            <button type="submit" class="btn-action delete-btn">
+                                <i class="fa-regular fa-trash-can"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+</html>
